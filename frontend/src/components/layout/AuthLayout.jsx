@@ -39,8 +39,7 @@ const AuthLayout = () => {
             alt=""
             style={{ width: 100, height: 100, marginBottom: 3 }}
           /> */}
-          <h1>SA</h1>
-          Stage Arranger
+          <h1>Stage Arranger</h1>
         </Box>
         <Outlet />
       </Container>
