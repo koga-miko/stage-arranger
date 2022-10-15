@@ -256,6 +256,15 @@ const Record = () => {
     }
   };
 
+  const changePrintModeToOff = () => {
+    const newDispStates = dispStates.slice();
+    newDispStates[DispStateIdx.PrintMode] = false;
+    setDispStates(newDispStates);
+    seatsArrangerRef.current.setPrintingMode(
+      newDispStates[DispStateIdx.PrintMode]
+    );
+  };
+
   const onClick = (x, y, event) => {
     if (seatsArrangerRef.current === null) return;
     const rect = canvasRef.current.getBoundingClientRect();
@@ -273,12 +282,7 @@ const Record = () => {
   const onMouseDown = (x, y, event) => {
     if (seatsArrangerRef.current === null) return;
     if (dispStates[DispStateIdx.PrintMode] === true) {
-      const newDispStates = dispStates.slice();
-      newDispStates[DispStateIdx.PrintMode] = false;
-      setDispStates(newDispStates);
-      seatsArrangerRef.current.setPrintingMode(
-        newDispStates[DispStateIdx.PrintMode]
-      );
+      changePrintModeToOff();
     } else {
       const rect = canvasRef.current.getBoundingClientRect();
       seatsArrangerRef.current.onMouseDown(x - rect.x, y - rect.y, event);

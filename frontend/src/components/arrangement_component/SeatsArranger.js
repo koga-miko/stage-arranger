@@ -630,7 +630,7 @@ class SeatsArranger {
 
   onKeyDown(event) {
     if (!this.initCompleted) return;
-    // console.log(`onKeyDown: key:${event.key}, ctrl:${event.ctrlKey}`);
+    console.log(`onKeyDown: key:${event.key}, ctrl:${event.ctrlKey}`);
     switch (event.key) {
       case "1":
       case "2":
@@ -650,6 +650,16 @@ class SeatsArranger {
         this.seatUpdate("");
         break;
       case " ":
+        if (event.ctrlKey) {
+          this.forEachAllSeats((seat) => {
+            if (seat.selected === true) {
+              seat.changeNormalAndSpecialState();
+            }
+          });
+          this.seatUpdate("");
+        }
+        break;
+      case "Backspace":
       case "Delete":
         // 選択状態の座席を隠す
         this.forEachAllSeats((seat) => {

@@ -78,6 +78,31 @@ class Seat extends PartsAction {
     }
   }
 
+  changeNormalAndSpecialState() {
+    switch (this.visualState) {
+      case Seat.VisualState.Normal:
+        this.visualState = Seat.VisualState.Hide;
+        break;
+      case Seat.VisualState.Hide:
+        this.visualState = Seat.VisualState.Black;
+        break;
+      case Seat.VisualState.Black:
+        this.visualState = Seat.VisualState.Red;
+        break;
+      case Seat.VisualState.Red:
+        this.visualState = Seat.VisualState.RedAndBlack;
+        break;
+      case Seat.VisualState.RedAndBlack:
+        this.visualState = Seat.VisualState.DoubleCircle;
+        break;
+      case Seat.VisualState.DoubleCircle:
+        this.visualState = Seat.VisualState.Normal;
+        break;
+      default:
+        this.visualState = Seat.VisualState.Normal;
+    }
+  }
+
   setVisualState(state) {
     this.visualState = state;
   }
