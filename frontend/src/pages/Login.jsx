@@ -48,12 +48,12 @@ const Login = () => {
       navigate("/");
     } catch (err) {
       setLoading(false);
-      console.log(`err.data.errors.param=${err.data.errors.param}`);
-      console.log(`err.data.errors.msg=${err.data.errors.message}`);
       const errors = err.data.errors;
       if (errors.param === "username") {
         setUsernameErrText(errors.message);
+        setPasswordErrText("");
       } else if (errors.param === "password") {
+        setUsernameErrText("");
         setPasswordErrText(errors.message);
       }
     }
