@@ -49,13 +49,12 @@ const Login = () => {
     } catch (err) {
       setLoading(false);
       console.log(`err.data.errors.param=${err.data.errors.param}`);
-      console.log(`err.data.errors.msg=${err.data.errors.msg}`);
-      const errors = err.response.data;
+      console.log(`err.data.errors.msg=${err.data.errors.message}`);
+      const errors = err.data.errors;
       if (errors.param === "username") {
-        setUsernameErrText(errors.msg);
-      }
-      if (errors.param === "password") {
-        setPasswordErrText(errors.msg);
+        setUsernameErrText(errors.message);
+      } else if (errors.param === "password") {
+        setPasswordErrText(errors.message);
       }
     }
   };
