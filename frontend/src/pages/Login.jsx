@@ -48,8 +48,10 @@ const Login = () => {
       navigate("/");
     } catch (err) {
       setLoading(false);
+      console.log(`err.msg=${err.msg}`);
       console.log(`err.data=${err.data}`);
       console.log(`err.data.errors=${err.data.errors}`);
+      console.log(`err.data.errors.param=${err.data.errors.param}`);
       console.log(`err.msg=${err.msg}`);
       console.log(`err.message=${err.message}`);
       console.log(`err.code=${err.code}`);
