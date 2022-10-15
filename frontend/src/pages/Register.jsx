@@ -57,7 +57,7 @@ const Register = () => {
       localStorage.setItem("token", res.token);
       navigate("/");
     } catch (err) {
-      const errors = err.data.errors;
+      const errors = err.response.data.errors;
       errors.forEach((err) => {
         if (err.param === "username") {
           setUsernameErrText(err.msg);
