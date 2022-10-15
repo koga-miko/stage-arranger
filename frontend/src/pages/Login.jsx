@@ -48,23 +48,15 @@ const Login = () => {
       navigate("/");
     } catch (err) {
       setLoading(false);
-      console.log(`err.msg=${err.msg}`);
-      console.log(`err.data=${err.data}`);
-      console.log(`err.data.errors=${err.data.errors}`);
       console.log(`err.data.errors.param=${err.data.errors.param}`);
-      console.log(`err.msg=${err.msg}`);
-      console.log(`err.message=${err.message}`);
-      console.log(`err.code=${err.code}`);
-      console.log(`err.response=${err.response}`);
-      const errors = err.response.data.param;
-      errors.forEach((err) => {
-        if (err.param === "username") {
-          setUsernameErrText(err.msg);
-        }
-        if (err.param === "password") {
-          setPasswordErrText(err.msg);
-        }
-      });
+      console.log(`err.data.errors.msg=${err.data.errors.msg}`);
+      const errors = err.response.data;
+      if (errors.param === "username") {
+        setUsernameErrText(errors.msg);
+      }
+      if (errors.param === "password") {
+        setPasswordErrText(errors.msg);
+      }
     }
   };
   return (
