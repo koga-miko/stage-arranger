@@ -36,9 +36,6 @@ const recordSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  favoritePosition: {
-    type: Number,
-  },
 });
 
 module.exports = mongoose.model("Record", recordSchema);

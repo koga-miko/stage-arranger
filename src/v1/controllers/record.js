@@ -2,11 +2,21 @@ const Record = require("../models/record");
 
 exports.create = async (req, res) => {
   try {
-    const recordCount = await Record.find().count();
+    let position = 0;
+    const [maxPositionRecord] = await Record.find()
+      .sort({
+        position: -1,
+      })
+      .limit(1)
+      .lean(true);
+
+    if (maxPositionRecord) {
+      position = maxPositionRecord.position + 1;
+    }
     //　レコード新規作成
     const record = await Record.create({
       user: req.user._id,
-      position: recordCount,
+      position: position,
     });
     res.status(201).json(record);
   } catch (err) {
@@ -57,6 +67,40 @@ exports.update = async (req, res) => {
 
     res.status(200).json(updatedRecord);
   } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
+exports.copy = async (req, res) => {
+  const { recordId } = req.params;
+  try {
+    const srcRecord = await Record.findOne({
+      user: req.user._id,
+      _id: recordId,
+    });
+    if (!srcRecord) {
+      return res.status(404).json("コピー元レコードが存在しません");
+    }
+    const [maxPositionRecord] = await Record.find()
+      .sort({
+        position: -1,
+      })
+      .limit(1)
+      .lean(true);
+
+    // レコード新規作成
+    const dstRecord = await Record.create({
+      user: srcRecord.user,
+      title: "コピー ～ " + srcRecord.title,
+      subTitle: srcRecord.subTitle,
+      description: srcRecord.description,
+      layoutInfo: srcRecord.layoutInfo,
+      position: maxPositionRecord.position + 1,
+    });
+    console.log(`_id=${dstRecord._id}`);
+    res.status(201).json(dstRecord);
+  } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 };

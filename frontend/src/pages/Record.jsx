@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Box, IconButton, TextField } from "@mui/material";
 import StaBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useNavigate, useParams } from "react-router-dom";
 import recordApi from "../api/recordApi";
 import { useDispatch, useSelector } from "react-redux";
@@ -238,6 +239,18 @@ const Record = () => {
         navigate(`/record/${newRecords[0]._id}`);
       }
       dispatch(setRecord(newRecords));
+    } catch (err) {
+      alert(err);
+    }
+  };
+
+  const copyRecord = async () => {
+    try {
+      const res = await recordApi.copy(recordId);
+      const newRecords = [res, ...records];
+      dispatch(setRecord(newRecords));
+      navigate(`/record/${res._id}`);
+      return;
     } catch (err) {
       alert(err);
     }
@@ -659,6 +672,9 @@ const Record = () => {
         <div>
           <IconButton>
             <StaBorderOutlinedIcon />
+          </IconButton>
+          <IconButton variant="outlined" onClick={copyRecord}>
+            <ContentCopyIcon />
           </IconButton>
           <IconButton
             variant="outlined"

@@ -2,7 +2,6 @@ import { Box } from "@mui/material";
 import { Container } from "@mui/system";
 import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import notionLogo from "../../assets/images/notion-logo.png";
 import authUtils from "../../utils/authUtils";
 const AuthLayout = () => {
   const navigate = useNavigate();

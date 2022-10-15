@@ -12,7 +12,10 @@ router.get("/", tokenHandler.verifyToken, recordController.getAll);
 router.get("/:recordId", tokenHandler.verifyToken, recordController.getOne);
 
 //ログインしているユーザーが投降したレコードを１つ更新
-router.post("/:recordId", tokenHandler.verifyToken, recordController.update);
+router.put("/:recordId", tokenHandler.verifyToken, recordController.update);
+
+//ログインしているユーザーが投降したレコードを１つコピー
+router.post("/:recordId", tokenHandler.verifyToken, recordController.copy);
 
 //ログインしているユーザーが投降したレコードを１つ削除
 router.delete("/:recordId", tokenHandler.verifyToken, recordController.delete);
