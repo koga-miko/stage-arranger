@@ -1,10 +1,12 @@
 import axios from "axios";
 
-//const BASE_URL = "http://localhost:5000/api/v1/"
-const BASE_URL = "https://stage-arranger.herokuapp.com/api/v1/"; // for Heroku
+let server_url = "http://localhost:5000/api/v1/";
+if (process.env.NODE_ENV === "production") {
+  server_url = "https://stage-arranger.herokuapp.com/api/v1/"; // for Heroku
+}
 const getToken = () => localStorage.getItem("token");
 const axiosClient = axios.create({
-  baseURL: BASE_URL,
+  baseURL: server_url,
 });
 
 //APIをたたく前に前処理を行う
