@@ -48,7 +48,10 @@ const Login = () => {
       navigate("/");
     } catch (err) {
       setLoading(false);
-      const errors = err.response.data.errors;
+      console.log(`err.message=${err.message}`);
+      console.log(`err.code=${err.code}`);
+      console.log(`err.response=${err.response}`);
+      const errors = err.response.data.param;
       errors.forEach((err) => {
         if (err.param === "username") {
           setUsernameErrText(err.msg);
