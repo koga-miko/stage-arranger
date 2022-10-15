@@ -48,6 +48,9 @@ const Login = () => {
       navigate("/");
     } catch (err) {
       setLoading(false);
+      console.log(`err.data=${err.data}`);
+      console.log(`err.data.errors=${err.data.errors}`);
+      console.log(`err.msg=${err.msg}`);
       console.log(`err.message=${err.message}`);
       console.log(`err.code=${err.code}`);
       console.log(`err.response=${err.response}`);
