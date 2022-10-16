@@ -26,6 +26,10 @@ const recordSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  seatsNumInfo: {
+    type: String,
+    default: "",
+  },
   favoritePosition: {
     type: Number,
   },
