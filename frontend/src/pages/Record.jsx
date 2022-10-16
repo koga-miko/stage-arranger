@@ -97,6 +97,26 @@ const Record = () => {
           setTitle(res.title);
           setSubTitle(res.subTitle);
           setDescription(res.description);
+          if (res.seatsNumInfo.length > 0) {
+            try {
+              var newSelectedValues = JSON.parse(res.seatsNumInfo);
+              if (newSelectedValues.length === selectedValues.length) {
+                setSelectedValues(newSelectedValues);
+              } else {
+                console.error(
+                  `length is not mismatch. selectedValues.length=${selectedValues.length} res.seatsNumInfo=${res.seatsNumInfo}`
+                );
+              }
+            } catch (e) {
+              /// エラー時の処理
+              console.e("Failed to parse json");
+              setSelectedValues(Array(IdSelIdx.MaxVal).fill(0));
+              return;
+            }
+          } else {
+            setSelectedValues(Array(IdSelIdx.MaxVal).fill(0));
+          }
+
           const seatsArranger = seatsArrangerRef.current;
           if (seatsArranger !== null) {
             seatsArranger.updateLayout(res.layoutInfo);
@@ -160,6 +180,16 @@ const Record = () => {
 
     setDispStates(newDispStates);
   }, [dispInfo]);
+
+  useEffect(() => {
+    try {
+      recordApi.update(recordId, {
+        seatsNumInfo: JSON.stringify(selectedValues),
+      });
+    } catch (err) {
+      alert(err);
+    }
+  }, [selectedValues]);
 
   const timeout = 500;
   const updateTitle = async (e) => {
