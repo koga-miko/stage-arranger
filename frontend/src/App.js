@@ -9,6 +9,7 @@ import { blue } from "@mui/material/colors";
 import AppLayout from "./components/layout/AppLayout";
 import Record from "./pages/Record";
 import Home from "./pages/Home";
+import Help from "./pages/Help";
 function App() {
   const theme = createTheme({
     palette: { primary: blue },
@@ -27,6 +28,7 @@ function App() {
             <Route path="record" element={<Home />} />
             <Route path="record/:recordId" element={<Record />} />
           </Route>
+          <Route path="help" element={<Help />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

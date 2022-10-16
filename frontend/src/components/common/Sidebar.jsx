@@ -79,13 +79,27 @@ const Sidebar = () => {
               justifyContent: "base-between",
             }}
           >
-            <Typography variant="body2" fontWeight="700">
-              {user.username}
-            </Typography>
+            <Box
+              sx={{
+                width: "90%",
+                alignItems: "left",
+              }}
+            >
+              <Typography variant="body2" fontWeight="700">
+                {user.username}
+              </Typography>
+            </Box>
             <IconButton onClick={logout}>
               <LogoutOutLinedIcon />
             </IconButton>
           </Box>
+        </ListItemButton>
+        <Box sx={{ paddingTop: "10px" }}></Box>
+        <ListItemButton component={Link} to={"/help"} target="_blank">
+          <Typography variant="body2" fontWeight="700">
+            操作方法一覧
+          </Typography>
+          <IconButton></IconButton>
         </ListItemButton>
         <Box sx={{ paddingTop: "10px" }}></Box>
         <ListItemButton>
@@ -113,9 +127,16 @@ const Sidebar = () => {
               justifyContent: "base-between",
             }}
           >
-            <Typography variant="body2" fontWeight="700">
-              プライベート
-            </Typography>
+            <Box
+              sx={{
+                width: "90%",
+                alignItems: "left",
+              }}
+            >
+              <Typography variant="body2" fontWeight="700">
+                プライベート
+              </Typography>
+            </Box>
             <IconButton onClick={(e) => addRecord(e)}>
               <AddBoxOutlinedIcon fontSize="small" />
             </IconButton>
