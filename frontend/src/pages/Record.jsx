@@ -15,6 +15,7 @@ import {
   seatsInfo,
 } from "../components/arrangement_component/data";
 import CommonDialog from "../components/common/CommonDialog";
+import LoadingBackdrop from "../components/common/LoadingBackdrop";
 
 const IdSelIdx = {
   Vn1: 0,
@@ -59,6 +60,7 @@ const Record = () => {
     Array(DispStateIdx.MaxVal).fill(false)
   );
   const [isOpenDeleteDialog, setIsOpenDeleteDialog] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     seatsArrangerRef.current = new SeatsArranger(
@@ -92,6 +94,7 @@ const Record = () => {
     let isMounted = true;
     const getRecord = async () => {
       try {
+        setLoading(true);
         const res = await recordApi.getOne(recordId);
         if (isMounted) {
           setTitle(res.title);
@@ -111,6 +114,7 @@ const Record = () => {
               /// エラー時の処理
               console.e("Failed to parse json");
               setSelectedValues(Array(IdSelIdx.MaxVal).fill(0));
+              setLoading(false);
               return;
             }
           } else {
@@ -127,10 +131,13 @@ const Record = () => {
         if (isMounted) {
           alert(err);
         }
+      } finally {
+        setLoading(false);
       }
     };
     getRecord();
     return () => {
+      setLoading(false);
       isMounted = false;
     };
   }, [recordId]);
@@ -726,6 +733,7 @@ const Record = () => {
 
   return (
     <>
+      <LoadingBackdrop isOpen={loading} />
       <Box
         sx={{
           display: "flex",
