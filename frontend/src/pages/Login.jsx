@@ -48,13 +48,13 @@ const Login = () => {
       navigate("/");
     } catch (err) {
       setLoading(false);
-      const errors = err.data.errors;
+      const errors = err.data.errors[0];
       if (errors.param === "username") {
-        setUsernameErrText(errors.message);
+        setUsernameErrText(errors.msg);
         setPasswordErrText("");
       } else if (errors.param === "password") {
         setUsernameErrText("");
-        setPasswordErrText(errors.message);
+        setPasswordErrText(errors.msg);
       }
     }
   };
