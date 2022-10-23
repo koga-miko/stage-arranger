@@ -48,13 +48,23 @@ const Login = () => {
       navigate("/");
     } catch (err) {
       setLoading(false);
-      const errors = err.data.errors[0];
-      if (errors.param === "username") {
-        setUsernameErrText(errors.msg);
-        setPasswordErrText("");
-      } else if (errors.param === "password") {
-        setUsernameErrText("");
-        setPasswordErrText(errors.msg);
+      setUsernameErrText("");
+      setPasswordErrText("");
+      let errors = err.data.errors;
+      if (Array.isArray(errors)) {
+        errors.forEach((error) => {
+          if (error.param === "username") {
+            setUsernameErrText(error.msg);
+          } else if (error.param === "password") {
+            setPasswordErrText(error.msg);
+          }
+        });
+      } else {
+        if (errors.param === "username") {
+          setUsernameErrText(errors.message);
+        } else if (errors.param === "password") {
+          setPasswordErrText(errors.message);
+        }
       }
     }
   };

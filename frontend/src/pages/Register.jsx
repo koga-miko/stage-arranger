@@ -57,21 +57,28 @@ const Register = () => {
       localStorage.setItem("token", res.token);
       navigate("/");
     } catch (err) {
-      const errors = err.data.errors[0];
-      if (errors.param === "username") {
-        setUsernameErrText(errors.msg);
-        setPasswordErrText("");
-        setConfirmPasswordErrText("");
-      }
-      if (errors.param === "password") {
-        setUsernameErrText("");
-        setPasswordErrText(errors.msg);
-        setConfirmPasswordErrText("");
-      }
-      if (errors.param === "confirmPassword") {
-        setUsernameErrText("");
-        setPasswordErrText("");
-        setConfirmPasswordErrText(errors.msg);
+      setUsernameErrText("");
+      setPasswordErrText("");
+      setConfirmPasswordErrText("");
+      let errors = err.data.errors;
+      if (Array.isArray(errors)) {
+        errors.forEach((error) => {
+          if (error.param === "username") {
+            setUsernameErrText(error.msg);
+          } else if (error.param === "password") {
+            setPasswordErrText(error.msg);
+          } else if (error.param === "confirmPassword") {
+            setConfirmPasswordErrText(error.msg);
+          }
+        });
+      } else {
+        if (errors.param === "username") {
+          setUsernameErrText(errors.message);
+        } else if (errors.param === "password") {
+          setPasswordErrText(errors.message);
+        } else if (errors.param === "confirmPassword") {
+          setConfirmPasswordErrText(errors.message);
+        }
       }
     } finally {
       setLoading(false);
