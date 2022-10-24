@@ -29,8 +29,8 @@ class CbLayer {
       x: cbLayerInfo.rect.x + cbLayerInfo.rect.w / 2,
       y: cbLayerInfo.rect.y + cbLayerInfo.rect.h / 2,
     };
-    this.cbSeats = [];
-    this.musicStands = [];
+    this.cbSeats2D = [];
+    this.musicStands2D = [];
     this.callbackFn = callbackFn;
     this.state = CbLayer.State.Idle;
     this.movStaPos = { x: 0, y: 0 };
@@ -43,73 +43,86 @@ class CbLayer {
     let offsetY = 0;
     if (cbLayerInfo.seatsInfs.length > 0) {
       offsetX =
-        cbLayerInfo.rect.x +
-        cbLayerInfo.rect.w / 2 -
-        (cbLayerInfo.seatsInfs[0].x +
-          cbLayerInfo.seatsInfs[cbLayerInfo.seatsInfs.length - 1].x) /
-          2;
-      offsetY = cbLayerInfo.rect.y + cbLayerInfo.rect.h / 2 - 10; // "10"は見た目の微調整で決定した
+        cbLayerInfo.rect.x
+        + cbLayerInfo.rect.w / 2
+        - (cbLayerInfo.seatsInfs[0].x +
+           cbLayerInfo.seatsInfs[cbLayerInfo.seatsInfs.length - 1].x) / 2;
+      offsetY = cbLayerInfo.rect.y
+        + cbLayerInfo.rect.h / 2
+        + cbLayerInfo.distRow / 2
+        - 10; // "10"は見た目の微調整で決定した
     }
 
-    cbLayerInfo.seatsInfs.forEach((seatInf, idx) => {
-      let seatObj = new RectSeat(
-        this.makePartsName("CBSeat", idx),
-        offsetX + cbLayerInfo.seatsInfs[idx].x,
-        offsetY + cbLayerInfo.seatsInfs[idx].y,
-        cbLayerInfo.seatWH.w,
-        cbLayerInfo.seatWH.h,
-        groupId
-      );
-      seatObj.registerCallback((partsName, state) => {
-        this.seatsUpdate(partsName);
-      });
-      this.cbSeats.push(seatObj);
-
-      let msObj = null;
-      msObj = new MusicStand(
-        this.makePartsName("CBMS", idx * 2),
-        offsetX + cbLayerInfo.seatsInfs[idx].x,
-        offsetY + cbLayerInfo.seatsInfs[idx].y + cbLayerInfo.distToStand
-      );
-      msObj.registerCallback((partsName, state) => {
-        this.update(partsName);
-      });
-      this.musicStands.push(msObj);
-
-      // まだ末端ではない場合
-      if (idx < cbLayerInfo.seatsInfs.length - 1) {
-        // 現在地と次の位置の間に譜面台を置く
-        msObj = new MusicStand(
-          this.makePartsName("CBMS", idx * 2 + 1),
-          offsetX +
-            (cbLayerInfo.seatsInfs[idx].x + cbLayerInfo.seatsInfs[idx + 1].x) /
-              2,
-          offsetY + cbLayerInfo.seatsInfs[idx].y + cbLayerInfo.distToStand
+    for(let row = 0; row < cbLayerInfo.numOfRows; row++) {
+      this.cbSeats2D[row] = [];
+      this.musicStands2D[row] = [];
+      cbLayerInfo.seatsInfs.forEach((seatInf, idx) => {
+        let seatObj = new RectSeat(
+          this.makePartsName("CBSeat", idx),
+          offsetX + cbLayerInfo.seatsInfs[idx].x,
+          offsetY + cbLayerInfo.seatsInfs[idx].y - cbLayerInfo.row * cbLayerInfo.distRow,
+          cbLayerInfo.seatWH.w,
+          cbLayerInfo.seatWH.h,
+          groupId
+        );
+        seatObj.registerCallback((partsName, state) => {
+          this.seatsUpdate(partsName);
+        });
+        this.cbSeats2D[row].push(seatObj);
+  
+        let msObj = new MusicStand(
+          this.makePartsName("CBMS", idx * 2),
+          offsetX + cbLayerInfo.seatsInfs[idx].x,
+          offsetY + cbLayerInfo.seatsInfs[idx].y + cbLayerInfo.distToStand - cbLayerInfo.row * cbLayerInfo.distRow
         );
         msObj.registerCallback((partsName, state) => {
           this.update(partsName);
         });
-        this.musicStands.push(msObj);
-      }
-    });
-    optimizeMusicStandsLayout(this.cbSeats, this.musicStands);
+        this.musicStands2D[row].push(msObj);
+  
+        // まだ末端ではない場合
+        if (idx < cbLayerInfo.seatsInfs.length - 1) {
+          // 現在地と次の位置の間に譜面台を置く
+          msObj = new MusicStand(
+            this.makePartsName("CBMS", idx * 2 + 1),
+            offsetX +
+              (cbLayerInfo.seatsInfs[idx].x + cbLayerInfo.seatsInfs[idx + 1].x) /
+                2,
+            offsetY + cbLayerInfo.seatsInfs[idx].y + cbLayerInfo.distToStand - cbLayerInfo.row * cbLayerInfo.distRow
+          );
+          msObj.registerCallback((partsName, state) => {
+            this.update(partsName);
+          });
+          this.musicStands2D[row].push(msObj);
+        }
+      });
+      console.log(this.cbSeats2D[row]);
+      console.log(this.musicStands2D[row]);
+      optimizeMusicStandsLayout(this.cbSeats2D[row], this.musicStands2D[row]);
+    }
   }
 
   serializeData() {
-    const cbSeatsData = [];
-    this.cbSeats.forEach((cbSeat) => {
-      cbSeatsData.push(cbSeat.serializeData());
+    const cbSeatsData2D = [];
+    this.cbSeats2D.forEach((cbSeats, row) => {
+      cbSeatsData2D[row] = [];
+      cbSeats.forEach((cbSeat) => {
+        cbSeatsData2D[row].push(cbSeat.serializeData());
+      });
     });
-    const musicStandsData = [];
-    this.musicStands.forEach((musicStand) => {
-      musicStandsData.push(musicStand.serializeData());
+    const musicStandsData2D = [];
+    this.musicStands2D.forEach((musicStands, row) => {
+      musicStandsData2D[row] = [];
+      musicStands.forEach((musicStand) => {
+        musicStandsData2D[row].push(musicStand.serializeData());
+      });
     });
     const jsonStr = JSON.stringify({
       visible: this.visible,
       rectPositions: this.rectPositions,
       centerPos: this.centerPos,
-      cbSeatsData: cbSeatsData,
-      musicStandsData: musicStandsData,
+      cbSeatsData2D: cbSeatsData2D,
+      musicStandsData2D: musicStandsData2D,
     });
     return jsonStr;
   }
@@ -125,12 +138,18 @@ class CbLayer {
     this.visible = obj.visible;
     this.rectPositions = obj.rectPositions;
     this.centerPos = obj.centerPos;
-    this.cbSeats.forEach((cbSeat, idx) => {
-      cbSeat.deserializeData(obj.cbSeatsData[idx]);
-    });
-    this.musicStands.forEach((musicStand, idx) => {
-      musicStand.deserializeData(obj.musicStandsData[idx]);
-    });
+    if (obj.cbSeatsData2D && obj.musicStandsData2D) {
+      this.cbSeats2D.forEach((cbSeats, row) => {
+        cbSeats.forEach((cbSeat, idx) => {
+          cbSeat.deserializeData(obj.cbSeatsData2D[row][idx]);
+        });
+      })
+      this.musicStands2D.forEach((musicStands, row) => {
+        musicStands.forEach((musicStand, idx) => {
+          musicStand.deserializeData(obj.musicStandsData2D[row][idx]);
+        });
+      })
+    }
   }
 
   setVisible(visible) {
@@ -150,7 +169,7 @@ class CbLayer {
 
   getActDispPoints() {
     if (this.visible) {
-      return mergeActDispPoints(this.cbSeats);
+      return mergeActDispPoints(this.cbSeats2D);
     }
     return { visible: false };
   }
@@ -163,7 +182,9 @@ class CbLayer {
   }
 
   seatsUpdate(partsname) {
-    optimizeMusicStandsLayout(this.cbSeats, this.musicStands);
+    this.cbSeats2D.forEach((cbSeats, row) => {
+      optimizeMusicStandsLayout(cbSeats, this.musicStands2D[row]);
+    })
     this.update(partsname);
   }
 
@@ -175,7 +196,7 @@ class CbLayer {
 
   getNumOfPersons() {
     return this.visible
-      ? this.cbSeats.filter((cbSeat) => {
+      ? this.cbSeats2D.flat().filter((cbSeat) => {
           return cbSeat.hasPerson();
         }).length
       : 0;
@@ -183,7 +204,7 @@ class CbLayer {
 
   getNumOfStands() {
     return this.visible
-      ? this.musicStands.filter((musicStand) => {
+      ? this.musicStands2D.flat().filter((musicStand) => {
           return musicStand.isExistence();
         }).length
       : 0;
@@ -195,16 +216,20 @@ class CbLayer {
     }
 
     this.state = CbLayer.State.Idle;
-    for (let col = 0; col < this.cbSeats.length; col++) {
-      if (this.cbSeats[col].isHit(x, y) === true) {
-        this.cbSeats[col].onMouseDown(x, y, event);
-        return;
+    for (let row = 0; row < this.cbSeats2D.length; row++) {
+      for (let col = 0; col < this.cbSeats2D[row].length; col++) {
+        if (this.cbSeats2D[row][col].isHit(x, y) === true) {
+          this.cbSeats2D[row][col].onMouseDown(x, y, event);
+          return;
+        }
       }
     }
-    for (let col = 0; col < this.musicStands.length; col++) {
-      if (this.musicStands[col].isHit(x, y) === true) {
-        this.musicStands[col].onMouseDown(x, y, event);
-        return;
+    for (let row = 0; row < this.musicStands2D.length; row++) {
+      for (let col = 0; col < this.musicStands2D[row].length; col++) {
+        if (this.musicStands2D[row][col].isHit(x, y) === true) {
+          this.musicStands2D[row][col].onMouseDown(x, y, event);
+          return;
+        }
       }
     }
     if (this.isHit(x, y)) {
@@ -239,11 +264,15 @@ class CbLayer {
       );
       this.rotCurRad = lenRad.radian;
     }
-    for (let col = 0; col < this.cbSeats.length; col++) {
-      this.cbSeats[col].onMouseMove(x, y, event);
+    for (let row = 0; row < this.cbSeats2D.length; row++) {
+      for (let col = 0; col < this.cbSeats2D[row].length; col++) {
+        this.cbSeats2D[row][col].onMouseMove(x, y, event);
+      }
     }
-    for (let col = 0; col < this.musicStands.length; col++) {
-      this.musicStands[col].onMouseMove(x, y, event);
+    for (let row = 0; row < this.musicStands2D.length; row++) {
+      for (let col = 0; col < this.musicStands2D[row].length; col++) {
+        this.musicStands2D[row][col].onMouseMove(x, y, event);
+      }
     }
   }
 
@@ -262,11 +291,15 @@ class CbLayer {
         this.rectPositions[3].y += this.movVal.y;
         this.centerPos.x += this.movVal.x;
         this.centerPos.y += this.movVal.y;
-        for (let col = 0; col < this.cbSeats.length; col++) {
-          this.cbSeats[col].movePos(this.movVal.x, this.movVal.y);
+        for (let row = 0; row < this.cbSeats2D.length; row++) {
+          for (let col = 0; col < this.cbSeats2D[row].length; col++) {
+            this.cbSeats2D[row][col].movePos(this.movVal.x, this.movVal.y);
+          }
         }
-        for (let col = 0; col < this.musicStands.length; col++) {
-          this.musicStands[col].movePos(this.movVal.x, this.movVal.y);
+        for (let row = 0; row < this.musicStands2D.length; row++) {
+          for (let col = 0; col < this.musicStands2D[row].length; col++) {
+            this.musicStands2D[row][col].movePos(this.movVal.x, this.movVal.y);
+          }
         }
         this.update();
       }
@@ -286,37 +319,45 @@ class CbLayer {
           this.centerPos,
           radVal
         );
-        for (let col = 0; col < this.cbSeats.length; col++) {
-          const [posX, posY] = this.cbSeats[col].getPos();
-          const rotPos = getRotAbsPos(
-            posX,
-            posY,
-            this.centerPos.x,
-            this.centerPos.y,
-            radVal
-          );
-          this.cbSeats[col].changePos(rotPos.x, rotPos.y);
+        for (let row = 0; row < this.cbSeats2D.length; row++) {
+          for (let col = 0; col < this.cbSeats2D[row].length; col++) {
+            const [posX, posY] = this.cbSeats2D[row][col].getPos();
+            const rotPos = getRotAbsPos(
+              posX,
+              posY,
+              this.centerPos.x,
+              this.centerPos.y,
+              radVal
+            );
+            this.cbSeats2D[row][col].changePos(rotPos.x, rotPos.y);
+          }
         }
-        for (let col = 0; col < this.musicStands.length; col++) {
-          const [posX, posY] = this.musicStands[col].getPos();
-          const rotPos = getRotAbsPos(
-            posX,
-            posY,
-            this.centerPos.x,
-            this.centerPos.y,
-            radVal
-          );
-          this.musicStands[col].changePos(rotPos.x, rotPos.y);
+        for (let row = 0; row < this.musicStands2D.length; row++) {
+          for (let col = 0; col < this.musicStands2D[row].length; col++) {
+            const [posX, posY] = this.musicStands2D[row][col].getPos();
+            const rotPos = getRotAbsPos(
+              posX,
+              posY,
+              this.centerPos.x,
+              this.centerPos.y,
+              radVal
+            );
+            this.musicStands2D[row][col].changePos(rotPos.x, rotPos.y);
+          }
         }
         this.update();
       }
       this.state = CbLayer.State.Idle;
     }
-    for (let col = 0; col < this.cbSeats.length; col++) {
-      this.cbSeats[col].onMouseUp(x, y, event);
+    for (let row = 0; row < this.cbSeats2D.length; row++) {
+      for (let col = 0; col < this.cbSeats2D[row].length; col++) {
+        this.cbSeats2D[row][col].onMouseUp(x, y, event);
+      }
     }
-    for (let col = 0; col < this.musicStands.length; col++) {
-      this.musicStands[col].onMouseUp(x, y, event);
+    for (let row = 0; row < this.musicStands2D.length; row++) {
+      for (let col = 0; col < this.musicStands2D[row].length; col++) {
+        this.musicStands2D[row][col].onMouseUp(x, y, event);
+      }
     }
   }
 
@@ -331,10 +372,10 @@ class CbLayer {
 
     this.drawBG(ctx, printing);
 
-    this.cbSeats.forEach((cbSeat) => {
+    this.cbSeats2D.flat().forEach((cbSeat) => {
       cbSeat.draw(ctx, printing);
     });
-    this.musicStands.forEach((musicStand) => {
+    this.musicStands2D.flat().forEach((musicStand) => {
       musicStand.draw(ctx, printing);
     });
   }
