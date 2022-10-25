@@ -135,10 +135,10 @@ class CbLayer {
       console.e("Failed to parse json");
       return;
     }
-    this.visible = obj.visible;
-    this.rectPositions = obj.rectPositions;
-    this.centerPos = obj.centerPos;
     if (obj.cbSeatsData2D && obj.musicStandsData2D) {
+      this.visible = obj.visible;
+      this.rectPositions = obj.rectPositions;
+      this.centerPos = obj.centerPos;
       this.cbSeats2D.forEach((cbSeats, row) => {
         cbSeats.forEach((cbSeat, idx) => {
           cbSeat.deserializeData(obj.cbSeatsData2D[row][idx]);
