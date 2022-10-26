@@ -64,15 +64,15 @@ export const cbLayerInfo = {
     x: 1270 * adjScale,
     y: 70 * adjScale,
     w: 500 * adjScale,
-    h: 280 * adjScale,
+    h: 240 * adjScale,
   },
   seatWH: {
     w: 58 * adjScale,
     h: 58 * adjScale,
   },
-  distToStand: 55 * adjScale,
+  distToStand: 50 * adjScale,
   numOfRows: 2,
-  distRow: 140 * adjScale,
+  distRow: 110   * adjScale,
   seatsInfs: [
     {
       x: 0 * adjScale,

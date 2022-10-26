@@ -50,7 +50,7 @@ class CbLayer {
       offsetY = cbLayerInfo.rect.y
         + cbLayerInfo.rect.h / 2
         + cbLayerInfo.distRow / 2
-        - 10; // "10"は見た目の微調整で決定した
+        - 5; // "5"は見た目の微調整で決定した
     }
 
     for(let row = 0; row < cbLayerInfo.numOfRows; row++) {
@@ -60,7 +60,7 @@ class CbLayer {
         let seatObj = new RectSeat(
           this.makePartsName("CBSeat", idx),
           offsetX + cbLayerInfo.seatsInfs[idx].x,
-          offsetY + cbLayerInfo.seatsInfs[idx].y - cbLayerInfo.row * cbLayerInfo.distRow,
+          offsetY + cbLayerInfo.seatsInfs[idx].y - row * cbLayerInfo.distRow,
           cbLayerInfo.seatWH.w,
           cbLayerInfo.seatWH.h,
           groupId
@@ -73,7 +73,7 @@ class CbLayer {
         let msObj = new MusicStand(
           this.makePartsName("CBMS", idx * 2),
           offsetX + cbLayerInfo.seatsInfs[idx].x,
-          offsetY + cbLayerInfo.seatsInfs[idx].y + cbLayerInfo.distToStand - cbLayerInfo.row * cbLayerInfo.distRow
+          offsetY + cbLayerInfo.seatsInfs[idx].y + cbLayerInfo.distToStand - row * cbLayerInfo.distRow
         );
         msObj.registerCallback((partsName, state) => {
           this.update(partsName);
@@ -88,7 +88,7 @@ class CbLayer {
             offsetX +
               (cbLayerInfo.seatsInfs[idx].x + cbLayerInfo.seatsInfs[idx + 1].x) /
                 2,
-            offsetY + cbLayerInfo.seatsInfs[idx].y + cbLayerInfo.distToStand - cbLayerInfo.row * cbLayerInfo.distRow
+            offsetY + cbLayerInfo.seatsInfs[idx].y + cbLayerInfo.distToStand - row * cbLayerInfo.distRow
           );
           msObj.registerCallback((partsName, state) => {
             this.update(partsName);
@@ -96,8 +96,6 @@ class CbLayer {
           this.musicStands2D[row].push(msObj);
         }
       });
-      console.log(this.cbSeats2D[row]);
-      console.log(this.musicStands2D[row]);
       optimizeMusicStandsLayout(this.cbSeats2D[row], this.musicStands2D[row]);
     }
   }
