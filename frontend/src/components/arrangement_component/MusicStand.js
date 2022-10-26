@@ -44,6 +44,18 @@ class MusicStand extends PartsAction {
     this.actState = obj.a; // 派生元クラスPartsActionの分
   }
 
+  deserializeDataWithoutPos(serializedData) {
+    try {
+      var obj = JSON.parse(serializedData);
+    } catch (e) {
+      /// エラー時の処理
+      console.e("Failed to parse json");
+      return;
+    }
+    this.state = obj.s;
+    this.actState = obj.a; // 派生元クラスPartsActionの分
+  }
+
   activate(isActive) {
     if (isActive === true) {
       // Redの場合は既にActiveのため変更しない

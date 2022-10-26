@@ -1,5 +1,5 @@
 import PartsAction from "./PartsAction";
-const SeatVisualState = {
+export const SeatVisualState = {
   Hide: "H",
   Normal: "N",
   Black: "B",
@@ -45,6 +45,19 @@ class RectSeat extends PartsAction {
     this.actState = obj.a; // 派生元クラスPartsActionの分
   }
 
+  deserializeDataWithoutArea(serializedData) {
+    try {
+      var obj = JSON.parse(serializedData);
+    } catch (e) {
+      /// エラー時の処理
+      console.e("Failed to parse json");
+      return;
+    }
+    this.visualState = obj.v;
+    this.groupId = obj.g;
+    this.actState = obj.a; // 派生元クラスPartsActionの分
+  }
+
   changeState() {
     switch (this.visualState) {
       case SeatVisualState.Normal:
@@ -59,6 +72,9 @@ class RectSeat extends PartsAction {
       default:
         this.visualState = SeatVisualState.Normal;
     }
+  }
+  hide() {
+    this.visualState = SeatVisualState.Hide;
   }
 
   changePos(x, y) {

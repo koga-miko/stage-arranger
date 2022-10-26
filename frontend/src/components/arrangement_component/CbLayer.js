@@ -65,6 +65,10 @@ class CbLayer {
           cbLayerInfo.seatWH.h,
           groupId
         );
+        // 1列目以外は非表示化しておく
+        if (row !== 0) {
+          seatObj.hide();
+        }
         seatObj.registerCallback((partsName, state) => {
           this.seatsUpdate(partsName);
         });
@@ -133,11 +137,11 @@ class CbLayer {
       console.e("Failed to parse json");
       return;
     }
+    this.visible = obj.visible;
     if (obj.cbSeatsData2D && obj.musicStandsData2D) {
-      this.visible = obj.visible;
       this.rectPositions = obj.rectPositions;
       this.centerPos = obj.centerPos;
-      this.cbSeats2D.forEach((cbSeats, row) => {
+        this.cbSeats2D.forEach((cbSeats, row) => {
         cbSeats.forEach((cbSeat, idx) => {
           cbSeat.deserializeData(obj.cbSeatsData2D[row][idx]);
         });
@@ -147,6 +151,19 @@ class CbLayer {
           musicStand.deserializeData(obj.musicStandsData2D[row][idx]);
         });
       })
+    } else {
+      for(let idx = 0; idx < this.cbSeats2D[0].length; idx++) {
+        this.cbSeats2D[0][idx].deserializeDataWithoutArea(obj.cbSeatsData[idx]);
+      }
+      for(let idx = 0; idx < this.cbSeats2D[1].length; idx++) {
+        this.cbSeats2D[1][idx].hide();
+      }
+      for(let idx = 0; idx < this.musicStands2D[0].length; idx++) {
+        this.musicStands2D[0][idx].deserializeDataWithoutPos(obj.musicStandsData[idx]);
+      }
+      for(let idx = 0; idx < this.musicStands2D[1].length; idx++) {
+        this.musicStands2D[1][idx].activate(false);
+      }
     }
   }
 
