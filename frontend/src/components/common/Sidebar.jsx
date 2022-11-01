@@ -117,6 +117,25 @@ const Sidebar = () => {
             <IconButton></IconButton>
           </Box>
         </ListItemButton>
+        {records
+          .filter((item) => {
+            return item.favorite === true;
+          })
+          .map((item, index) => (
+            <ListItemButton
+              sx={{ pl: "20px" }}
+              component={Link}
+              to={`/record/${item._id}`}
+              key={item._id}
+              selected={index === activeIndex}
+            >
+              <Typography>
+                {/* {item.icon} */}
+                {item.title}
+              </Typography>
+            </ListItemButton>
+          ))
+        }
         <Box sx={{ paddingTop: "10px" }}></Box>
         <ListItemButton>
           <Box

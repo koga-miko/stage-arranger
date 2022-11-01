@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Box, IconButton, TextField } from "@mui/material";
 import StaBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
+import StarIcon from '@mui/icons-material/Star';
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useNavigate, useParams } from "react-router-dom";
@@ -45,6 +46,7 @@ const Record = () => {
   const [title, setTitle] = useState("");
   const [subTitle, setSubTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [favorite, setFavorite] = useState(false);
   const [timerId, setTimerId] = useState(null);
   const dispatch = useDispatch();
   const records = useSelector((state) => state.record.value);
@@ -100,6 +102,11 @@ const Record = () => {
           setTitle(res.title);
           setSubTitle(res.subTitle);
           setDescription(res.description);
+          if(res.favorite) {
+            setFavorite(true);
+          } else {
+            setFavorite(false);
+          }
           if (res.seatsNumInfo.length > 0) {
             try {
               var newSelectedValues = JSON.parse(res.seatsNumInfo);
@@ -245,6 +252,25 @@ const Record = () => {
       try {
         setTimerId(null);
         recordApi.update(recordId, { description: newDescription });
+      } catch (err) {
+        alert(err);
+      }
+    }, timeout);
+    setTimerId(tempTimerId);
+  };
+
+  const updateFavorite = async (e) => {
+    if (timerId !== null) clearTimeout(timerId);
+    const newFavorite = !favorite;
+    let temp = [...records];
+    const index = temp.findIndex((e) => e._id === recordId);
+    temp[index] = { ...temp[index], favorite: newFavorite };
+    setFavorite(newFavorite);
+    dispatch(setRecord(temp));
+    const tempTimerId = setTimeout(async () => {
+      try {
+        setTimerId(null);
+        recordApi.update(recordId, { favorite: newFavorite });
       } catch (err) {
         alert(err);
       }
@@ -707,12 +733,19 @@ const Record = () => {
     setIsOpenDeleteDialog(false);
   };
 
+  const renderStarIcon = () => {
+    if (favorite) {
+      return <StarIcon color="warning"/>
+    } else {
+      return <StaBorderOutlinedIcon />
+    }
+  }
   const renderTopIcons = () => {
     if (commonDisp.isSidebarOpened) {
       return (
         <div>
-          <IconButton>
-            <StaBorderOutlinedIcon />
+          <IconButton onClick={updateFavorite}>
+            {renderStarIcon()}
           </IconButton>
           <IconButton variant="outlined" onClick={copyRecord}>
             <ContentCopyIcon />
