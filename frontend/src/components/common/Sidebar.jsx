@@ -127,7 +127,7 @@ const Sidebar = () => {
               component={Link}
               to={`/record/${item._id}`}
               key={item._id}
-              selected={index === activeIndex}
+              selected={item._id === recordId}
             >
               <Typography>
                 {/* {item.icon} */}
@@ -167,7 +167,7 @@ const Sidebar = () => {
             component={Link}
             to={`/record/${item._id}`}
             key={item._id}
-            selected={index === activeIndex}
+            selected={item._id === recordId}
           >
             <Typography>
               {/* {item.icon} */}
