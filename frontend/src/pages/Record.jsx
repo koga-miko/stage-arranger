@@ -64,6 +64,11 @@ const Record = () => {
   const [isOpenDeleteDialog, setIsOpenDeleteDialog] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // テーブルの移動対応
+  const [dragging, setDragging] = useState(false);
+  const [startLeft, setStartLeft] = useState(0);
+  const [startTop, setStartTop] = useState(0);
+
   useEffect(() => {
     seatsArrangerRef.current = new SeatsArranger(
       seatsInfo,
@@ -89,6 +94,7 @@ const Record = () => {
   };
 
   useEffect(() => {
+    clearTablePos();
     renderCanvas();
   }, []);
 
@@ -191,6 +197,7 @@ const Record = () => {
     });
 
     newDispStates[DispStateIdx.PrintMode] = false;
+    clearTablePos();
 
     setDispStates(newDispStates);
   }, [dispInfo]);
@@ -326,6 +333,7 @@ const Record = () => {
     seatsArrangerRef.current.setPrintingMode(
       newDispStates[DispStateIdx.PrintMode]
     );
+    clearTablePos();
   };
 
   const onClick = (x, y, event) => {
@@ -536,7 +544,7 @@ const Record = () => {
       ) {
         return;
       } else {
-        return <th>{partName}</th>;
+        return <th className="TableTitleParts">{partName}</th>;
       }
     } else {
       if (
@@ -545,7 +553,7 @@ const Record = () => {
       ) {
         return;
       } else {
-        return <th>{partName}</th>;
+        return <th className="TableTitleParts">{partName}</th>;
       }
     }
   };
@@ -662,19 +670,60 @@ const Record = () => {
     }
   };
 
+  const clearTablePos = () => {
+    const table = document.getElementById("myTable");
+    table.style.left = 770 + "px";
+    table.style.top = 950 + "px";
+  };
+
+  const onMouseDownOnTable = (event) => {
+    if (dispStates[DispStateIdx.PrintMode] === false) {
+      setDragging(false);
+      return;
+    }
+    setDragging(true);
+    setStartLeft(event.clientX);
+    setStartTop(event.clientY);
+  };
+
+  const onMouseMoveOnTable = (event) => {
+    if (dispStates[DispStateIdx.PrintMode] === false) {
+      setDragging(false);
+      return;
+    }
+    if (dragging) {
+      const deltaX = event.clientX - startLeft;
+      const deltaY = event.clientY - startTop;
+      const table = document.getElementById("myTable");
+      table.style.left = table.offsetLeft + deltaX + "px";
+      table.style.top = table.offsetTop + deltaY + "px";
+      setStartLeft(event.clientX);
+      setStartTop(event.clientY);
+    }
+  };
+
+  const onMouseUpOnTable = () => {
+    setDragging(false);
+  };
+
   const renderTableDisp = () => {
     return (
-      <table>
+      <table
+        id="myTable"
+        onMouseDown={onMouseDownOnTable}
+        onMouseMove={onMouseMoveOnTable}
+        onMouseUp={onMouseUpOnTable}
+      >
         <thead>
           <tr>
-            <th>パート</th>
+            <th className="TableTitleOther">パート</th>
             {renderPartNamesInTable(IdSelIdx.Vn1, "Vn1")}
             {renderPartNamesInTable(IdSelIdx.Vn2, "Vn2")}
             {renderPartNamesInTable(IdSelIdx.Vn3, "Vn3")}
             {renderPartNamesInTable(IdSelIdx.Va, "Va")}
             {renderPartNamesInTable(IdSelIdx.Vc, "Vc")}
             {renderPartNamesInTable(IdSelIdx.Cb, "Cb")}
-            <th>合計</th>
+            <th className="TableTitleParts">合計</th>
           </tr>
         </thead>
         <tbody>
