@@ -6,7 +6,13 @@ import {
   optimizeMusicStandsLayout,
   mergeActDispPoints,
 } from "./util";
-import { seatsArrangerInfo, cbLayerInfo, SimplePartsInfo } from "./data";
+import {
+  seatsArrangerInfo,
+  cbLayerInfo,
+  SimplePartsInfo,
+  canvasInfo,
+  assumedSize,
+} from "./data";
 import AreaDivider from "./AreaDivider";
 import HistoryManager from "./HistoryManager";
 import CbLayer from "./CbLayer";
@@ -838,45 +844,67 @@ class SeatsArranger {
   draw() {
     const ctx = this.ctx;
 
-    // まず背景をクリア
-    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
     // 印刷用モードでCanvas全体イメージを抽出出来た場合
     if (
       this.printing &&
       this.printingArea != null &&
       this.printingImg !== null
     ) {
-      // キャンバス全体イメージから部分抽出してそれを広げて表示
+      // 表示領域サイズいっぱいまでキャンパスを広げて表示する(等倍)
+      this.canvas.width = assumedSize.w;
+      this.canvas.height = assumedSize.h;
+
+      // まず背景をクリア
+      ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
       ctx.drawImage(
         this.printingImg,
-        this.printingArea.x,
-        this.printingArea.y,
-        this.printingArea.w,
-        this.printingArea.h,
-        this.printingArea.w / this.printingArea.h >
-          this.canvas.width / this.canvas.height
-          ? 0
-          : (this.canvas.width -
-              (this.printingArea.w * this.canvas.height) /
-                this.printingArea.h) /
-              2,
-        this.printingArea.w / this.printingArea.h >
-          this.canvas.width / this.canvas.height
-          ? (this.canvas.height -
-              (this.printingArea.h * this.canvas.width) / this.printingArea.w) /
-              2
-          : 0,
-        this.printingArea.w / this.printingArea.h >
-          this.canvas.width / this.canvas.height
-          ? this.canvas.width
-          : (this.printingArea.w * this.canvas.height) / this.printingArea.h,
-        this.printingArea.w / this.printingArea.h >
-          this.canvas.width / this.canvas.height
-          ? (this.printingArea.h * this.canvas.width) / this.printingArea.w
-          : this.canvas.height
+        0,
+        0,
+        this.canvas.width,
+        this.canvas.height
       );
+
+      //   // キャンバス全体イメージから部分抽出してそれを広げて表示(現在表示中の内容から可能な限り広げる動的処理)
+      //   ctx.drawImage(
+      //     this.printingImg,
+      //     this.printingArea.x,
+      //     this.printingArea.y,
+      //     this.printingArea.w,
+      //     this.printingArea.h,
+      //     this.printingArea.w / this.printingArea.h >
+      //       this.canvas.width / this.canvas.height
+      //       ? 0
+      //       : (this.canvas.width -
+      //           (this.printingArea.w * this.canvas.height) /
+      //             this.printingArea.h) /
+      //           2,
+      //     this.printingArea.w / this.printingArea.h >
+      //       this.canvas.width / this.canvas.height
+      //       ? (this.canvas.height -
+      //           (this.printingArea.h * this.canvas.width) / this.printingArea.w) /
+      //           2
+      //       : 0,
+      //     this.printingArea.w / this.printingArea.h >
+      //       this.canvas.width / this.canvas.height
+      //       ? this.canvas.width
+      //       : (this.printingArea.w * this.canvas.height) / this.printingArea.h,
+      //     this.printingArea.w / this.printingArea.h >
+      //       this.canvas.width / this.canvas.height
+      //       ? (this.printingArea.h * this.canvas.width) / this.printingArea.w
+      //       : this.canvas.height
+      //   );
       return;
+    }
+    // まず背景をクリア
+    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    // 実際の画面サイズを設定（※印刷レイアウト時に変更されていた可能性があるため）
+    if (this.canvas.width !== canvasInfo.w) {
+      this.canvas.width = canvasInfo.w;
+    }
+    if (this.canvas.height !== canvasInfo.h) {
+      this.canvas.height = canvasInfo.h;
     }
 
     // 座席の描画

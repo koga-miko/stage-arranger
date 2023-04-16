@@ -134,8 +134,7 @@ const Sidebar = () => {
                 {item.title}
               </Typography>
             </ListItemButton>
-          ))
-        }
+          ))}
         <Box sx={{ paddingTop: "10px" }}></Box>
         <ListItemButton>
           <Box

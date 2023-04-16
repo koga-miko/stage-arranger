@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Box, IconButton, TextField } from "@mui/material";
 import StaBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
-import StarIcon from '@mui/icons-material/Star';
+import StarIcon from "@mui/icons-material/Star";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useNavigate, useParams } from "react-router-dom";
@@ -102,7 +102,7 @@ const Record = () => {
           setTitle(res.title);
           setSubTitle(res.subTitle);
           setDescription(res.description);
-          if(res.favorite) {
+          if (res.favorite) {
             setFavorite(true);
           } else {
             setFavorite(false);
@@ -735,18 +735,16 @@ const Record = () => {
 
   const renderStarIcon = () => {
     if (favorite) {
-      return <StarIcon color="warning"/>
+      return <StarIcon color="warning" />;
     } else {
-      return <StaBorderOutlinedIcon />
+      return <StaBorderOutlinedIcon />;
     }
-  }
+  };
   const renderTopIcons = () => {
     if (commonDisp.isSidebarOpened) {
       return (
         <div>
-          <IconButton onClick={updateFavorite}>
-            {renderStarIcon()}
-          </IconButton>
+          <IconButton onClick={updateFavorite}>{renderStarIcon()}</IconButton>
           <IconButton variant="outlined" onClick={copyRecord}>
             <ContentCopyIcon />
           </IconButton>

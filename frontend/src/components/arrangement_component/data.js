@@ -1,17 +1,19 @@
 import piano_image from "./images/piano.png";
 
 // 下記レイアウトの数値を決定する際に前提にしていた画面サイズ
-const assumedW = 1800;
-
-// 実際の画面サイズ
+export const assumedSize = {
+  w: 1800,
+  h: 900,
+};
+// 実際の画面サイズ幅
 const actualW = 1400;
 
 // レイアウトの数値（前提画面サイズをもとにした値）を実際の画面サイズを考慮した数値へ変換するための補正値。幅の値だけ考慮する（縦・横比は共通にするため）
-const adjScale = actualW / assumedW;
+const adjScale = actualW / assumedSize.w;
 
 export const canvasInfo = {
-  w: 1800 * adjScale,
-  h: 900 * adjScale,
+  w: assumedSize.w * adjScale,
+  h: assumedSize.h * adjScale,
 };
 
 export const seatsArrangerInfo = {
@@ -72,7 +74,7 @@ export const cbLayerInfo = {
   },
   distToStand: 50 * adjScale,
   numOfRows: 2,
-  distRow: 110   * adjScale,
+  distRow: 110 * adjScale,
   seatsInfs: [
     {
       x: 0 * adjScale,
