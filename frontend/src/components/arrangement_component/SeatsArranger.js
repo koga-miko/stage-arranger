@@ -851,8 +851,8 @@ class SeatsArranger {
       this.printingImg !== null
     ) {
       // 表示領域サイズいっぱいまでキャンパスを広げて表示する(等倍)
-      this.canvas.width = assumedSize.w;
-      this.canvas.height = assumedSize.h;
+      // this.canvas.width = assumedSize.w;
+      // this.canvas.height = assumedSize.h;
 
       // まず背景をクリア
       ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
