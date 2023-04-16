@@ -407,6 +407,7 @@ const Record = () => {
       seatsArrangerRef.current.setCbLayerVisible(newDispStates[dispStateIdx]);
     } else if (dispStateIdx === DispStateIdx.PrintMode) {
       seatsArrangerRef.current.setPrintingMode(newDispStates[dispStateIdx]);
+      clearTablePos(true);
     } else {
       seatsArrangerRef.current.setSimplePartsVisible(
         e.target.name,
@@ -670,10 +671,16 @@ const Record = () => {
     }
   };
 
-  const clearTablePos = () => {
+  const clearTablePos = (isPrintMode = false) => {
+    let left = "770px";
+    let top = "950px";
+    if (isPrintMode) {
+      left = "100px";
+      top = "150px";
+    }
     const table = document.getElementById("myTable");
-    table.style.left = 770 + "px";
-    table.style.top = 950 + "px";
+    table.style.left = left;
+    table.style.top = top;
   };
 
   const onMouseDownOnTable = (event) => {
@@ -713,6 +720,7 @@ const Record = () => {
         onMouseDown={onMouseDownOnTable}
         onMouseMove={onMouseMoveOnTable}
         onMouseUp={onMouseUpOnTable}
+        onMouseOut={onMouseUpOnTable}
       >
         <thead>
           <tr>
