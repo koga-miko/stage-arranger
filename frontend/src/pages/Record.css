@@ -22,7 +22,6 @@ td {
   text-align: center;
   padding: 5px;
   border: 1px solid #c1c1c1;
-  user-select: none;
 }
 th {
   background: #efefef;

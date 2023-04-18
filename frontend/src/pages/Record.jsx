@@ -675,8 +675,8 @@ const Record = () => {
     let left = "770px";
     let top = "950px";
     if (isPrintMode) {
-      left = "100px";
-      top = "150px";
+      left = "50px";
+      top = "120px";
     }
     const table = document.getElementById("myTable");
     table.style.left = left;
@@ -819,6 +819,12 @@ const Record = () => {
     }
   };
 
+  const renderCanvasTopPadding = () => {
+    if (dispStates[DispStateIdx.PrintMode]) {
+      return <Box sx={{ paddingTop: "50px" }}></Box>;
+    }
+  };
+
   return (
     <>
       <LoadingBackdrop isOpen={loading} />
@@ -839,7 +845,7 @@ const Record = () => {
           }}
         />
       </Box>
-      <Box sx={{ padding: "10px 50px" }}>
+      <Box sx={{ padding: "10px 10px" }}>
         <Box>
           <TextField
             onChange={updateTitle}
@@ -880,6 +886,8 @@ const Record = () => {
               ".MuiOutlinedInput-root": { fontSize: "1rem" },
             }}
           />
+          {renderCanvasTopPadding()}
+
           <div className="ArrangementComponent">
             <div>
               <canvas
