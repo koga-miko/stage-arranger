@@ -2,8 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
 const path = require("path");
-const PORT = process.env.PORT || 5000;
 require("dotenv").config();
+const PORT = process.env.PORT || 5000;
 const cors = require("cors");
 
 if (!process.env.PORT) {
@@ -38,6 +38,19 @@ app.get("/manifest.json", (req, res) => {
 app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "./frontend/build/index.html"));
 });
+
+//Edgeの自動起動
+const { execSync } = require("child_process");
+execSync(
+  "start microsoft-edge:http://localhost:8888",
+  (err, stdout, stderr) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(stdout);
+  }
+);
 
 //DB接続
 try {
