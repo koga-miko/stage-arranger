@@ -42,7 +42,7 @@ app.get("/*", (req, res) => {
 //Edgeの自動起動
 const { execSync } = require("child_process");
 execSync(
-  "start microsoft-edge:http://localhost:8888",
+  `start microsoft-edge:http://localhost:${PORT}`,
   (err, stdout, stderr) => {
     if (err) {
       console.error(err);
@@ -62,4 +62,5 @@ try {
 
 app.listen(PORT, () => {
   console.log(`ローカルサーバー起動中・・・PORT=${PORT}`);
+  console.log(`Stage-Arranger-App Url: http://localhost:${PORT}`);
 });
