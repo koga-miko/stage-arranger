@@ -40,17 +40,17 @@ app.get("/*", (req, res) => {
 });
 
 //Edgeの自動起動
-const { execSync } = require("child_process");
-execSync(
-  `start microsoft-edge:http://localhost:${PORT}`,
-  (err, stdout, stderr) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    console.log(stdout);
-  }
-);
+// const { execSync } = require("child_process");
+//execSync(
+//  `start microsoft-edge:http://localhost:${PORT}`,
+//  (err, stdout, stderr) => {
+//    if (err) {
+//      console.error(err);
+//      return;
+//    }
+//    console.log(stdout);
+//  }
+//);
 
 //DB接続
 try {
