@@ -271,6 +271,7 @@ class Seat extends PartsAction {
 
     if (this.selected === true) {
       ctx.beginPath();
+      ctx.setLineDash([]);
       ctx.strokeStyle = "rgb(239, 144, 89)";
       ctx.lineWidth = 3;
       ctx.moveTo(this.x + this.radius + ctx.lineWidth, this.y);
