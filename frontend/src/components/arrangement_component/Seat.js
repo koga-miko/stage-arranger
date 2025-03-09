@@ -7,6 +7,7 @@ class Seat extends PartsAction {
     Red: "R", // SpecialMode: 枠が赤の状態
     RedAndBlack: "RB", // SpecialMode: 枠が赤で中が真っ黒の状態
     DoubleCircle: "DC", // SpecialMode: 二重丸
+    OutCircleInRect: "CR", // SpecialMode: 外は丸で中は四角
   };
 
   constructor(partsName, x, y, radius, groupId) {
@@ -71,10 +72,13 @@ class Seat extends PartsAction {
         this.visualState = Seat.VisualState.DoubleCircle;
         break;
       case Seat.VisualState.DoubleCircle:
+        this.visualState = Seat.VisualState.OutCircleInRect;
+        break;
+      case Seat.VisualState.OutCircleInRect:
         this.visualState = Seat.VisualState.Red;
         break;
       default:
-        this.visualState = Seat.VisualState.Red;
+      this.visualState = Seat.VisualState.Red;
     }
   }
 
@@ -96,6 +100,9 @@ class Seat extends PartsAction {
         this.visualState = Seat.VisualState.DoubleCircle;
         break;
       case Seat.VisualState.DoubleCircle:
+        this.visualState = Seat.VisualState.OutCircleInRect;
+        break;
+      case Seat.VisualState.OutCircleInRect:
         this.visualState = Seat.VisualState.Normal;
         break;
       default:
@@ -150,7 +157,8 @@ class Seat extends PartsAction {
       case Seat.VisualState.Black:
       case Seat.VisualState.RedAndBlack:
       case Seat.VisualState.DoubleCircle:
-        active = true;
+      case Seat.VisualState.OutCircleInRect:
+          active = true;
         break;
       default:
         break;
@@ -191,6 +199,7 @@ class Seat extends PartsAction {
       case Seat.VisualState.Normal:
       case Seat.VisualState.Red:
       case Seat.VisualState.DoubleCircle:
+      case Seat.VisualState.OutCircleInRect:
         active = true;
         break;
       default:
@@ -265,6 +274,17 @@ class Seat extends PartsAction {
       ctx.arc(this.x, this.y, this.radius + ctx.lineWidth, 0, 2 * Math.PI);
       ctx.stroke();
     }
+
+    // 特殊状態の描画 ※外に円、中に四角の描画は最後に書かないと隠れてしまったため、ここで実施
+    switch (this.visualState) {
+      case Seat.VisualState.OutCircleInRect:
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(this.x - this.radius * 0.6, this.y - this.radius * 0.6, this.radius * 1.2, this.radius * 1.2);
+        break;
+      default:
+    }
+
   }
 }
 
