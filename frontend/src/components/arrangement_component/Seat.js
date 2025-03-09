@@ -249,6 +249,9 @@ class Seat extends PartsAction {
         ctx.fill();
         ctx.stroke();
         break;
+      case Seat.VisualState.OutCircleInRect:
+        ctx.setLineDash([7,7]);
+        break;
       default:
     }
     ctx.moveTo(this.x + this.radius, this.y);
@@ -274,17 +277,6 @@ class Seat extends PartsAction {
       ctx.arc(this.x, this.y, this.radius + ctx.lineWidth, 0, 2 * Math.PI);
       ctx.stroke();
     }
-
-    // 特殊状態の描画 ※外に円、中に四角の描画は最後に書かないと隠れてしまったため、ここで実施
-    switch (this.visualState) {
-      case Seat.VisualState.OutCircleInRect:
-        ctx.strokeStyle = "black";
-        ctx.lineWidth = 2;
-        ctx.strokeRect(this.x - this.radius * 0.6, this.y - this.radius * 0.6, this.radius * 1.2, this.radius * 1.2);
-        break;
-      default:
-    }
-
   }
 }
 
