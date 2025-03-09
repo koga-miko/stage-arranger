@@ -5,7 +5,7 @@ if (process.env.NODE_ENV === "production") {
   //  server_url = "https://stage-arranger.herokuapp.com/api/v1/"; // for Heroku
   // server_url = "http://localhost:8888/api/v1/"; // for local-server
   server_url =
-    "https://af89-2400-2650-2222-ce00-1601-6c95-d0a1-ef89.ngrok-free.app/api/v1/"; // for local-server via ngrok
+    "https://5fa8-2400-2650-2222-ce00-c0a-8361-58fd-63bc.ngrok-free.app/api/v1/"; // for local-server via ngrok
 }
 const getToken = () => localStorage.getItem("token");
 const axiosClient = axios.create({
