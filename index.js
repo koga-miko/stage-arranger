@@ -6,6 +6,10 @@ require("dotenv").config();
 const PORT = process.env.PORT || 5000;
 const cors = require("cors");
 
+// Change the current working directory to the directory of this file
+process.chdir(__dirname);
+console.log(`Current working directory: ${process.cwd()}`);
+
 if (!process.env.PORT) {
   app.use(
     cors({
