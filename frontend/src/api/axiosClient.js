@@ -1,16 +1,31 @@
 import axios from "axios";
 
+// デフォルトURL（config.jsonが読み込めない場合のフォールバック）
 let server_url = "http://localhost:5000/api/v1/";
-if (process.env.NODE_ENV === "production") {
-  //  server_url = "https://stage-arranger.herokuapp.com/api/v1/"; // for Heroku
-  // server_url = "http://localhost:8888/api/v1/"; // for local-server
-  server_url =
-    "https://098e-2400-2650-2222-ce00-c0a-8361-58fd-63bc.ngrok-free.app/api/v1/"; // for local-server via ngrok
-}
+
 const getToken = () => localStorage.getItem("token");
+
+// axiosインスタンスを作成（初期はデフォルトURL）
 const axiosClient = axios.create({
   baseURL: server_url,
 });
+
+// 本番環境では、public/config.jsonから実行時にURLを読み込んでbaseURLを更新
+if (process.env.NODE_ENV === "production") {
+  fetch("/config.json")
+    .then((response) => response.json())
+    .then((config) => {
+      const activeKey = config.activeUrl || "ngrok";
+      const configuredUrl = config.apiUrls[activeKey];
+      if (configuredUrl) {
+        axiosClient.defaults.baseURL = configuredUrl;
+        console.log(`API URL loaded from config.json: ${configuredUrl} (${activeKey})`);
+      }
+    })
+    .catch((error) => {
+      console.warn("Failed to load config.json, using default URL:", error);
+    });
+}
 
 //APIをたたく前に前処理を行う
 axiosClient.interceptors.request.use(async (config) => {
