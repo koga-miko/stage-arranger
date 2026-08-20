@@ -141,12 +141,26 @@ class CbLayer {
     if (obj.cbSeatsData2D && obj.musicStandsData2D) {
       this.rectPositions = obj.rectPositions;
       this.centerPos = obj.centerPos;
-        this.cbSeats2D.forEach((cbSeats, row) => {
+      // 過去のデータでは、座席数が少ない場合があるので、その場合はオブジェクトを削除する（配列から消す）
+      if (obj.cbSeatsData2D.length < this.cbSeats2D.length) {
+        this.cbSeats2D.splice(obj.cbSeatsData2D.length);
+      }
+      this.cbSeats2D.forEach((cbSeats, row) => {
+        if (obj.cbSeatsData2D[row].length < cbSeats.length) {
+          cbSeats.splice(obj.cbSeatsData2D[row].length);
+        }
         cbSeats.forEach((cbSeat, idx) => {
           cbSeat.deserializeData(obj.cbSeatsData2D[row][idx]);
         });
       })
+      // 過去のデータでは、譜面台の数が少ない場合があるので、その場合はオブジェクトを削除する（配列から消す）
+      if (obj.musicStandsData2D.length < this.musicStands2D.length) {
+        this.musicStands2D.splice(obj.musicStandsData2D.length);
+      }
       this.musicStands2D.forEach((musicStands, row) => {
+        if (obj.musicStandsData2D[row].length < musicStands.length) {
+          musicStands.splice(obj.musicStandsData2D[row].length);
+        }
         musicStands.forEach((musicStand, idx) => {
           musicStand.deserializeData(obj.musicStandsData2D[row][idx]);
         });

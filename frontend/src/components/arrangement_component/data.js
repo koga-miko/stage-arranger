@@ -63,9 +63,9 @@ export const seatsInfo = {
 
 export const cbLayerInfo = {
   rect: {
-    x: 1270 * adjScale,
+    x: 1110 * adjScale,
     y: 70 * adjScale,
-    w: 500 * adjScale,
+    w: 660 * adjScale,
     h: 240 * adjScale,
   },
   seatWH: {
@@ -98,6 +98,14 @@ export const cbLayerInfo = {
     },
     {
       x: 400 * adjScale,
+      y: 0 * adjScale,
+    },
+    {
+      x: 480 * adjScale,
+      y: 0 * adjScale,
+    },
+    {
+      x: 560 * adjScale,
       y: 0 * adjScale,
     },
   ],
