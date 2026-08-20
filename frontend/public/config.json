@@ -1,0 +1,10 @@
+{
+  "apiUrls": {
+    "local": "http://localhost:5000/api/v1/",
+    "ngrok": "https://098e-2400-2650-2222-ce00-c0a-8361-58fd-63bc.ngrok-free.app/api/v1/",
+    "localPort8888": "http://localhost:8888/api/v1/",
+    "heroku": "https://stage-arranger.herokuapp.com/api/v1/"
+  },
+  "activeUrl": "ngrok",
+  "comment": "activeUrlを 'local', 'ngrok', 'localPort8888', 'heroku' のいずれかに変更してください。または apiUrls に新しいURLを追加し、activeUrl でそのキーを指定することもできます。"
+}
